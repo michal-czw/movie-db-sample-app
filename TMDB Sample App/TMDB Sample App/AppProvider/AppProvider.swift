@@ -11,13 +11,11 @@ class AppProvider: AppProviding {
     
     var cache: NSCache<NSString, AnyObject>
     var configuration: Configuration?
-    var service: any ConfigurationProvidingService
     
     init() {
-        service = ConfigurationService()
         cache = .init()
         Task {
-            configuration = try await service.fetchConfiguration()
+            configuration = try await ConfigurationService().fetchConfiguration()
         }
     }
     

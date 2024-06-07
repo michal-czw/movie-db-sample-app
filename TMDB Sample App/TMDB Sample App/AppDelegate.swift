@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func initializeApp() {
+        guard !ProcessInfo.processInfo.isTestMode else { return }
         TMDB.initialize(with: AppProvider())
     }
     

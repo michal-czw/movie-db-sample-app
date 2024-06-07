@@ -9,7 +9,7 @@ import UIKit
 
 enum ServiceConfiguration {
     
-    static let apiKey = "10a6e277c5d1fc345463ee5b8e23c733"
+    static let apiKey = ProcessInfo.processInfo.environment["API_KEY"]
     static let apiVersion = "3"
     
 }

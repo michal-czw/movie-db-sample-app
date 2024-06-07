@@ -45,6 +45,10 @@
 		4AD160492C11E742004B12EE /* TMDBSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4AD160472C11E742004B12EE /* TMDBSampleApp.xcdatamodeld */; };
 		4AD160542C11ECC0004B12EE /* FavoriteChangeset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD160532C11ECC0004B12EE /* FavoriteChangeset.swift */; };
 		4AD160562C1238C8004B12EE /* ConfigurationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD160552C1238C8004B12EE /* ConfigurationService.swift */; };
+		4AD1605C2C12F8EF004B12EE /* ProcessInfo+TestMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1605B2C12F8EF004B12EE /* ProcessInfo+TestMode.swift */; };
+		4AD1605E2C12FA90004B12EE /* TMDBTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1605D2C12FA90004B12EE /* TMDBTests.swift */; };
+		4AD160642C12FE72004B12EE /* TestAppProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD160632C12FE72004B12EE /* TestAppProvider.swift */; };
+		4AD160662C12FEBD004B12EE /* MockAppProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD160652C12FEBD004B12EE /* MockAppProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +111,12 @@
 		4AD160482C11E742004B12EE /* TMDBSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TMDBSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		4AD160532C11ECC0004B12EE /* FavoriteChangeset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteChangeset.swift; sourceTree = "<group>"; };
 		4AD160552C1238C8004B12EE /* ConfigurationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationService.swift; sourceTree = "<group>"; };
+		4AD160572C12F613004B12EE /* TMDB Sample App.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TMDB Sample App.xctestplan"; sourceTree = SOURCE_ROOT; };
+		4AD1605B2C12F8EF004B12EE /* ProcessInfo+TestMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+TestMode.swift"; sourceTree = "<group>"; };
+		4AD1605D2C12FA90004B12EE /* TMDBTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBTests.swift; sourceTree = "<group>"; };
+		4AD160612C12FCF2004B12EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4AD160632C12FE72004B12EE /* TestAppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppProvider.swift; sourceTree = "<group>"; };
+		4AD160652C12FEBD004B12EE /* MockAppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +167,7 @@
 		4AC167482C10EE56003CE916 /* TMDB Sample App */ = {
 			isa = PBXGroup;
 			children = (
+				4AD1605A2C12F8DD004B12EE /* Extensions */,
 				4AD1600F2C11342D004B12EE /* AppProvider */,
 				4AD15FF32C112026004B12EE /* Common */,
 				4AD1604E2C11E8BC004B12EE /* Favoriting */,
@@ -176,7 +187,11 @@
 		4AC1675F2C10EE59003CE916 /* TMDB Sample AppTests */ = {
 			isa = PBXGroup;
 			children = (
+				4AD160572C12F613004B12EE /* TMDB Sample App.xctestplan */,
+				4AD1605D2C12FA90004B12EE /* TMDBTests.swift */,
 				4AC167602C10EE59003CE916 /* TMDB_Sample_AppTests.swift */,
+				4AD160612C12FCF2004B12EE /* Info.plist */,
+				4AD160672C130024004B12EE /* SharedMocks */,
 			);
 			path = "TMDB Sample AppTests";
 			sourceTree = "<group>";
@@ -284,6 +299,23 @@
 				4AD160532C11ECC0004B12EE /* FavoriteChangeset.swift */,
 			);
 			path = Favoriting;
+			sourceTree = "<group>";
+		};
+		4AD1605A2C12F8DD004B12EE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4AD1605B2C12F8EF004B12EE /* ProcessInfo+TestMode.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4AD160672C130024004B12EE /* SharedMocks */ = {
+			isa = PBXGroup;
+			children = (
+				4AD160632C12FE72004B12EE /* TestAppProvider.swift */,
+				4AD160652C12FEBD004B12EE /* MockAppProvider.swift */,
+			);
+			path = SharedMocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -418,6 +450,7 @@
 			files = (
 				4AD15FF12C111DDD004B12EE /* NowPlayingCollectionViewCell.swift in Sources */,
 				4AC167832C10F18B003CE916 /* Endpoint.swift in Sources */,
+				4AD1605C2C12F8EF004B12EE /* ProcessInfo+TestMode.swift in Sources */,
 				4AD15FF62C112062004B12EE /* GradientView.swift in Sources */,
 				4AD1603A2C11D317004B12EE /* MovieDetailsSceneWorker.swift in Sources */,
 				4AD160542C11ECC0004B12EE /* FavoriteChangeset.swift in Sources */,
@@ -456,6 +489,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AD1605E2C12FA90004B12EE /* TMDBTests.swift in Sources */,
+				4AD160642C12FE72004B12EE /* TestAppProvider.swift in Sources */,
+				4AD160662C12FEBD004B12EE /* MockAppProvider.swift in Sources */,
 				4AC167612C10EE59003CE916 /* TMDB_Sample_AppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,7 +714,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "TMDB Sample AppTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michal-czwarnowski-wysocki.TMDB-Sample-AppTests";
@@ -697,7 +734,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "TMDB Sample AppTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michal-czwarnowski-wysocki.TMDB-Sample-AppTests";

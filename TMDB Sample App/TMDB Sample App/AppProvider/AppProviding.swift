@@ -11,6 +11,5 @@ protocol AppProviding {
     
     var cache: NSCache<NSString, AnyObject> { get }
     var configuration: Configuration? { get }
-    var service: ConfigurationProvidingService { get }
     
 }

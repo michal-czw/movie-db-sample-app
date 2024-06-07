@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "ED80C164-1CF8-4609-B1AC-4C24A5C75703",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "TEST_MODE"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:TMDB Sample App.xcodeproj",
+        "identifier" : "4AC1675B2C10EE59003CE916",
+        "name" : "TMDB Sample AppTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:TMDB Sample App.xcodeproj",
+        "identifier" : "4AC167652C10EE59003CE916",
+        "name" : "TMDB Sample AppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
