@@ -15,7 +15,7 @@ struct ConfigurationService: ConfigurationProvidingService {
     
     let urlSession: URLSession
     
-    init(urlSession: URLSession = .shared) {
+    init(urlSession: URLSession = TMDB.appProvider.urlSession) {
         self.urlSession = urlSession
     }
     

@@ -27,7 +27,7 @@ final class NowPlayingSceneConfigurator {
 extension NowPlayingSceneConfigurator: NowPlayingSceneConfigurable {
     
     func configure() -> NowPlayingSceneViewController {
-        let viewController = NowPlayingSceneViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        let viewController = NowPlayingSceneViewController()
         
         let worker = NowPlayingSceneWorker(service: service)
         let presenter = NowPlayingScenePresenter(viewController: viewController)

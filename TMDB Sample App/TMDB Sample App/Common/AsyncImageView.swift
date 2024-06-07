@@ -27,7 +27,7 @@ class AsyncImageView: UIImageView {
             return
         }
         
-        dataTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+        dataTask = TMDB.appProvider.urlSession.dataTask(with: url) { [weak self] data, _, _ in
             guard let self else { return }
             
             guard let data, let image = UIImage(data: data) else {

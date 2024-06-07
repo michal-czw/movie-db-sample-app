@@ -20,26 +20,18 @@ final class MovieDetailsScenePresenter {
 
 extension MovieDetailsScenePresenter: MovieDetailsScenePresenterInput {
     func showFavoriteStatus(isFavorite: Bool) {
-        DispatchQueue.main.async {
-            self.viewController?.showFavoriteStatue(isFavorite: isFavorite)
-        }
+        viewController?.showFavoriteStatus(isFavorite: isFavorite)
     }
     
     func showResult(_ movie: Movie) {
-        DispatchQueue.main.async {
-            self.viewController?.showMovieDetails(viewModel: movie.asMovieDetailsViewModel)
-        }
+        viewController?.showMovieDetails(viewModel: movie.asMovieDetailsViewModel)
     }
     
     func showLoadingIndicator() {
-        DispatchQueue.main.async {
-            self.viewController?.showLoadingIndicator()
-        }
+        viewController?.showLoadingIndicator()
     }
     
     func showLoadingError(_ message: String) {
-        DispatchQueue.main.async {
-            self.viewController?.showError(message: message)
-        }
+        viewController?.showError(message: message)
     }
 }

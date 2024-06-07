@@ -11,9 +11,11 @@ class AppProvider: AppProviding {
     
     var cache: NSCache<NSString, AnyObject>
     var configuration: Configuration?
+    var urlSession: URLSession
     
     init() {
         cache = .init()
+        urlSession = .shared
         Task {
             configuration = try await ConfigurationService().fetchConfiguration()
         }

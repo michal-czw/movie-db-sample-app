@@ -10,7 +10,7 @@ import UIKit
 protocol MovieDetailsSceneViewControllerInput: AnyObject {
     
     func showMovieDetails(viewModel: MovieDetailsViewModel)
-    func showFavoriteStatue(isFavorite: Bool)
+    func showFavoriteStatus(isFavorite: Bool)
     func showLoadingIndicator()
     func showError(message: String)
     
@@ -59,7 +59,7 @@ final class MovieDetailsSceneViewController: UIViewController {
     }
     
     private func setUpViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
         view.addSubview(loadingIndicator)
@@ -88,6 +88,39 @@ final class MovieDetailsSceneViewController: UIViewController {
 
 extension MovieDetailsSceneViewController: MovieDetailsSceneViewControllerInput {
     func showMovieDetails(viewModel: MovieDetailsViewModel) {
+        DispatchQueue.main.async {
+            self.updateUI(with: viewModel)
+        }
+    }
+    
+    func showFavoriteStatus(isFavorite: Bool) {
+        DispatchQueue.main.async {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+                image: UIImage(systemName: isFavorite ? "star.fill" : "star"),
+                style: .plain,
+                target: self,
+                action: #selector(self.toggleFavorite)
+            )
+        }
+    }
+    
+    func showLoadingIndicator() {
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+        }
+    }
+    
+    func showError(message: String) {
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+        }
+    }
+    
+    @objc private func toggleFavorite() {
+        interactor?.toggleFavorite()
+    }
+    
+    private func updateUI(with viewModel: MovieDetailsViewModel) {
         stackView.arrangedSubviews.forEach({ $0.removeFromSuperview() })
         loadingIndicator.stopAnimating()
         
@@ -97,27 +130,6 @@ extension MovieDetailsSceneViewController: MovieDetailsSceneViewControllerInput 
         stackView.addArrangedSubview(MovieDetailsViewsBuilder.makeInfoLabel(viewModel.releaseDate))
         stackView.addArrangedSubview(MovieDetailsViewsBuilder.makeInfoLabel(viewModel.rating))
         stackView.addArrangedSubview(MovieDetailsViewsBuilder.makeDescriptionLabel(viewModel.description))
-    }
-    
-    func showFavoriteStatue(isFavorite: Bool) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: isFavorite ? "star.fill" : "star"),
-            style: .plain,
-            target: self,
-            action: #selector(toggleFavorite)
-        )
-    }
-    
-    func showLoadingIndicator() {
-        loadingIndicator.startAnimating()
-    }
-    
-    func showError(message: String) {
-        loadingIndicator.stopAnimating()
-    }
-    
-    @objc private func toggleFavorite() {
-        interactor?.toggleFavorite()
     }
     
 }

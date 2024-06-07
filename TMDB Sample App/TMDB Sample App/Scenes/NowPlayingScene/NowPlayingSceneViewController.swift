@@ -24,7 +24,7 @@ protocol NowPlayingSceneViewControllerOutput: AnyObject {
     
 }
 
-final class NowPlayingSceneViewController: UICollectionViewController {
+final class NowPlayingSceneViewController: UIViewController {
     
     private enum Constants {
         static let cellIdentifier = "cell"
@@ -37,6 +37,12 @@ final class NowPlayingSceneViewController: UICollectionViewController {
     var interactor: NowPlayingSceneInteractorInput?
     var dataStore: NowPlayingSceneDataStore?
     var router: NowPlayingSceneRoutingLogic?
+    
+    private let collectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
     
     private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -54,20 +60,33 @@ final class NowPlayingSceneViewController: UICollectionViewController {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
     private func setUpViews() {
+        view.backgroundColor = .systemBackground
         title = "Now Playing Movies"
         
         collectionView.register(
             NowPlayingCollectionViewCell.self,
             forCellWithReuseIdentifier: Constants.cellIdentifier
         )
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         collectionView.refreshControl = refreshControl
         
+        view.addSubview(collectionView)
         view.addSubview(loadingIndicator)
         view.addConstraints([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             loadingIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
@@ -79,24 +98,51 @@ final class NowPlayingSceneViewController: UICollectionViewController {
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataStore?.moviesCount ?? 0
+}
+
+extension NowPlayingSceneViewController: NowPlayingSceneViewControllerInput {
+    
+    func reloadData() {
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+            self.collectionView.refreshControl?.endRefreshing()
+            self.collectionView.reloadData()
+        }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let model = dataStore?.viewModel(at: indexPath) else {
-            fatalError("Couldn't find viewModel at \(indexPath)")
+    func insertItems(at indexPaths: [IndexPath]) {
+        guard let moviesCount = dataStore?.moviesCount,
+              let lastIndexPathItemToInsert = indexPaths.last?.item,
+              lastIndexPathItemToInsert < moviesCount else {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+            return
         }
         
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: Constants.cellIdentifier,
-            for: indexPath
-        ) as! NowPlayingCollectionViewCell
-        cell.configure(with: model)
-        return cell
+        DispatchQueue.main.async {
+            self.collectionView.insertItems(at: indexPaths)
+        }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func showLoadingIndicator() {
+        DispatchQueue.main.async {
+            self.loadingIndicator.startAnimating()
+        }
+    }
+    
+    func showError(message: String) {
+        DispatchQueue.main.async {
+            self.loadingIndicator.stopAnimating()
+            self.collectionView.refreshControl?.endRefreshing()
+        }
+    }
+    
+}
+
+extension NowPlayingSceneViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let model = dataStore?.viewModel(at: indexPath) else {
             fatalError("Couldn't find viewModel at \(indexPath)")
         }
@@ -104,7 +150,7 @@ final class NowPlayingSceneViewController: UICollectionViewController {
         router?.showMovieDetails(id: model.id)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let dataStore else { return }
         
         let shouldLoadNextPage = indexPath.item >= dataStore.moviesCount - 6
@@ -117,32 +163,23 @@ final class NowPlayingSceneViewController: UICollectionViewController {
     
 }
 
-extension NowPlayingSceneViewController: NowPlayingSceneViewControllerInput {
+extension NowPlayingSceneViewController: UICollectionViewDataSource {
     
-    func reloadData() {
-        loadingIndicator.stopAnimating()
-        collectionView.refreshControl?.endRefreshing()
-        collectionView.reloadData()
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        dataStore?.moviesCount ?? 0
     }
     
-    func insertItems(at indexPaths: [IndexPath]) {
-        guard let moviesCount = dataStore?.moviesCount,
-              let lastIndexPathItemToInsert = indexPaths.last?.item,
-              lastIndexPathItemToInsert < moviesCount else {
-            collectionView.reloadData()
-            return
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let model = dataStore?.viewModel(at: indexPath) else {
+            fatalError("Couldn't find viewModel at \(indexPath)")
         }
         
-        collectionView.insertItems(at: indexPaths)
-    }
-    
-    func showLoadingIndicator() {
-        loadingIndicator.startAnimating()
-    }
-    
-    func showError(message: String) {
-        loadingIndicator.stopAnimating()
-        collectionView.refreshControl?.endRefreshing()
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: Constants.cellIdentifier,
+            for: indexPath
+        ) as! NowPlayingCollectionViewCell
+        cell.configure(with: model)
+        return cell
     }
     
 }
@@ -158,7 +195,7 @@ extension NowPlayingSceneViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let contentWidth = collectionView.frame.width
+        let contentWidth = collectionView.safeAreaLayoutGuide.layoutFrame.width
         - Constants.sectionInsets.left
         - Constants.sectionInsets.right
         - Constants.interitemSpacing
